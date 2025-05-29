@@ -3,6 +3,7 @@ package scr;
 import scr.Passenger;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
 
 public class Booking {
@@ -35,5 +36,17 @@ public class Booking {
                 ", date = " + date +
                 ", Passengers { " + passengers +
                 " }";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Booking booking = (Booking) o;
+        return id == booking.id && flightId == booking.flightId && Objects.equals(destination, booking.destination) && Objects.equals(date, booking.date) && Objects.equals(passengers, booking.passengers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, destination, flightId, date, passengers);
     }
 }

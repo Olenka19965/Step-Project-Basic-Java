@@ -1,5 +1,7 @@
 package scr;
 
+import java.util.Objects;
+
 public class Passenger {
     private String name;
     private String surname;
@@ -21,5 +23,17 @@ public class Passenger {
                 " name = " + name +
                 ", surname = " + surname +
                 " }";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Passenger passenger = (Passenger) o;
+        return Objects.equals(name, passenger.name) && Objects.equals(surname, passenger.surname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, surname);
     }
 }
