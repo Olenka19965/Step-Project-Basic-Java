@@ -43,10 +43,18 @@ public class MainMenu {
 
                     break;
                 case "4":
-
+                    System.out.print("Ведіть номер бронювання, яке бажаєте скасувати: ");
+                    try {
+                        int flightId = Integer.parseInt(scanner.nextLine());
+                        bookingController.delBookingById(flightId);
+                    } catch (NumberFormatException err) {
+                        System.out.println("Номер бронювання, що Ви ввели не є числом!");
+                    }
+                    returnToMainMenu();
                     break;
                 case  "5":
-
+                    bookingController.displayAllBookings();
+                    returnToMainMenu();
                     break;
                 case "6":
                     break;
