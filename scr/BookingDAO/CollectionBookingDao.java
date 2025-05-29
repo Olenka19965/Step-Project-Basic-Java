@@ -5,7 +5,7 @@ import scr.Booking;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CollectionBookingDao implements BookingDAO{
+public class CollectionBookingDao implements BookingDAO {
     public List<Booking> bookings = new ArrayList<>();
 
     public List<Booking> getAllBookings() { return bookings; }

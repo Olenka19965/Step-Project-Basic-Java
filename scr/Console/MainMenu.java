@@ -1,8 +1,12 @@
 package scr.Console;
 
+import scr.BookingDAO.BookingController;
+
 import java.util.Scanner;
 
 public class MainMenu {
+    public static final BookingController bookingController = new BookingController();
+
     public static void mainMenu () {
         System.out.println("-----------------------------------------------\n" +
                 "|                Головне меню                  |\n" +

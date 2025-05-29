@@ -6,14 +6,28 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
 
+import static scr.Console.MainMenu.bookingController;
+
 public class Booking {
-    private int id;
+    private final int id;
     private String destination;
     private int flightId;
     private LocalDate date;
     private Set<Passenger> passengers;
 
-    public void setId(int id) { this.id = id; }
+    private static int idCounter = bookingController.getAllBookings().stream()
+        .mapToInt(Booking::getId)
+        .max()
+        .orElse(0) + 1;
+
+    public Booking (String destination, int flightId, LocalDate date, Set<Passenger> passengers) {
+        this.id = idCounter++;
+        this.destination = destination;
+        this.flightId = flightId;
+        this.date = date;
+        this.passengers = passengers;
+    }
+
     public int getId() { return id; }
 
     public void setDestination(String destination) { this.destination = destination; }
