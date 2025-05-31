@@ -35,6 +35,7 @@ return flightDAO.getAllFlights();
 LocalDate today = LocalDate.now();
 return flightDAO.getAllFlights().stream()
         .filter(f->f.getDepartureTime().toLocalDate().equals(today))
+        .sorted(Comparator.comparing(f -> f.getDepartureTime()))
         .collect(Collectors.toList());
     }
 

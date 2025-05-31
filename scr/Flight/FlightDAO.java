@@ -2,6 +2,7 @@ package scr.Flight;
 import java.io.*;
 import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FlightDAO {
     private List <FlightObject> flights = new ArrayList<>();
@@ -48,10 +49,11 @@ flights = (List<FlightObject>) ois.readObject();
             System.out.println("Помилка читання файлу: " + e.getMessage());
             generateFlights();
         }
-
     }
-    public List<FlightObject>getAllFlights(){
-        return new ArrayList<>(flights);
+    public List<FlightObject> getAllFlights() {
+        return flights.stream()
+                .sorted(Comparator.comparing(FlightObject::getDepartureTime))
+                .collect(Collectors.toList());
     }
     public Optional<FlightObject> getFlightById(String id) {
         return flights.stream()
