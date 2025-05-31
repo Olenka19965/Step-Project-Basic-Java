@@ -1,6 +1,5 @@
 package scr;
 
-import scr.BookingDAO.BookingController;
 import scr.Console.MainMenu;
 
 public class Main {

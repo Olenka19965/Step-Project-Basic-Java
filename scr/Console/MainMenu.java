@@ -40,16 +40,35 @@ public class MainMenu {
                     returnToMainMenu();
                     break;
                 case "3":
+                    System.out.print("Введіть місце призначення: ");
+                    String endDestination = scanner.nextLine();
+                    System.out.print("Введіть дату польоту (в форматі dd/mm/yyyy): ");
+                    String dateOfFlight = scanner.nextLine();
+                    try {
+                        System.out.print("Введіть кількість квитків, що ви бажаєте забронювати: ");
+                        int bookingNum = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Введена кількість квитків для пошуку бронювання не є числом!");
+                    }
+
+
+
 
                     break;
                 case "4":
-                    System.out.print("Ведіть номер бронювання, яке бажаєте скасувати: ");
-                    try {
-                        int flightId = Integer.parseInt(scanner.nextLine());
-                        bookingController.delBookingById(flightId);
-                    } catch (NumberFormatException err) {
-                        System.out.println("Номер бронювання, що Ви ввели не є числом!");
+                    bookingController.displayAllBookings();
+                    if (bookingController.getAllBookings().isEmpty()) {
+                        System.out.println("Наразі у вас немає заброньованих рейсів для скасування");
+                    } else {
+                        System.out.print("Ведіть номер бронювання, яке бажаєте скасувати: ");
+                        try {
+                            int flightId = Integer.parseInt(scanner.nextLine());
+                            bookingController.delBookingById(flightId);
+                        } catch (NumberFormatException err) {
+                            System.out.println("Номер бронювання, що Ви ввели не є числом!");
+                        }
                     }
+
                     returnToMainMenu();
                     break;
                 case  "5":
