@@ -33,11 +33,11 @@ public class FlightController {
           }
       }
   }
-  private void showAllFlights(){
+ public void showAllFlights(){
       List<FlightObject>flights = flightService.getAllFlights();
       flights.forEach(System.out :: println);
   }
-    private void findFlightById() {
+    public void findFlightById() {
         while (true) {
             System.out.println("Введіть ID рейсу (формат: FL + 4 цифри, наприклад FL4959): ");
             String id = scanner.nextLine().trim();
@@ -53,7 +53,7 @@ public class FlightController {
             }
         }
     }
-    private void searchFlights() {
+    public void searchFlights() {
         String destination = null;
         while (true) {
             try {System.out.print("Куди летимо (місто англійською): ");
@@ -109,7 +109,7 @@ public class FlightController {
             throw new InvalidDestinationException("Ви ввели назву міста не вірно, введіть назву міста англійською.");
         }
     }
-private void showTodayFlights(){
+public void showTodayFlights(){
       List <FlightObject> todayFlights = flightService.getTodayFlights();
       if (todayFlights.isEmpty()){
           System.out.println("На сьогодні немає рейсів.");

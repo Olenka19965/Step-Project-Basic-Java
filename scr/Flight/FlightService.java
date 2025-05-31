@@ -14,9 +14,8 @@ return flightDAO.getAllFlights();
     }
 
     public FlightObject getFlightById(String id)throws NotFoundException{// пошук рейсу по ід
- Optional<FlightObject>flightOpt= flightDAO.getAllFlights().stream()
-        .filter(f->f.getId().equalsIgnoreCase(id)).findFirst();
-         return flightOpt.orElseThrow(()-> new NotFoundException("Рейс з ID " + id + " не знайдено."));
+        return flightDAO.getFlightById(id)
+                .orElseThrow(() -> new NotFoundException("Рейс з ID " + id + " не знайдено."));
     }
 
     public List<FlightObject> searchFlights(String destination, LocalDate date, int passengers) {//пошук рейсу за умовами
