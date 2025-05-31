@@ -1,11 +1,13 @@
 package scr.Console;
 
 import scr.BookingDAO.BookingController;
+import scr.Flight.FlightController;
 
 import java.util.Scanner;
 
 public class MainMenu {
     public static final BookingController bookingController = new BookingController();
+    public static final FlightController flightController = new FlightController();
 
     public static void mainMenu () {
         System.out.println("-----------------------------------------------\n" +
@@ -34,12 +36,14 @@ public class MainMenu {
                 case "1":
                     System.out.println("1. Найближчі рейси");
                     returnToMainMenu();
+                    flightController.showTodayFlights();
                     break;
                 case "2":
                     System.out.println("2. Інформація про рейс");
                     returnToMainMenu();
                     break;
                 case "3":
+
 
 
 
