@@ -7,9 +7,9 @@ import scr.Flight.FlightService;
 import java.util.Scanner;
 
 public class MainMenu {
-    private final FlightService flightService;
+//    private final FlightService flightService;
     public static final BookingController bookingController = new BookingController();
-    public static final FlightController flightController = new FlightController();
+//    public static final FlightController flightController = new FlightController();
 
     public static void mainMenu () {
         System.out.println("-----------------------------------------------\n" +
@@ -30,7 +30,7 @@ public class MainMenu {
     static String menuItem = "";
 
     public static void run(){
-        flightController.
+//        flightController.
 
         while (!menuItem.equals("6")) {
             System.out.print("Будь-ласка виберіть пункт меню: ");
@@ -38,7 +38,7 @@ public class MainMenu {
             switch (menuItem.trim()){
                 case "1":
                     System.out.println("1. Найближчі рейси");
-                    flightController.showAllFlights();
+//                    flightController.showAllFlights();
 //                    flightController.showTodayFlights();
                     returnToMainMenu();
                     break;
