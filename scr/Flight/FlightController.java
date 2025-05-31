@@ -6,12 +6,12 @@ import static java.lang.System.out;
 
 public class FlightController {
   private final FlightService flightService;
-    public FlightController (){ this.flightService = new FlightService(new FlightDAO());}
+//    public FlightController (){ this.flightService = new FlightService(new FlightDAO());}
 
     private final Scanner scanner = new Scanner(System.in);
-//  public FlightController(FlightService flightService){
-//      this.flightService=flightService;
-//  }
+  public FlightController(FlightService flightService){
+      this.flightService=flightService;
+  }
   public void run() throws NotFoundException {
       while (true){
           out.println("\n--- Меню ---");
@@ -34,7 +34,7 @@ public class FlightController {
           }
       }
   }
-  private void showAllFlights(){
+  public void showAllFlights(){
       List<FlightObject>flights = flightService.getAllFlights();
       flights.forEach(System.out :: println);
   }

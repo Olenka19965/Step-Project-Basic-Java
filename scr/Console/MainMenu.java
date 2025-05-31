@@ -2,10 +2,12 @@ package scr.Console;
 
 import scr.BookingDAO.BookingController;
 import scr.Flight.FlightController;
+import scr.Flight.FlightService;
 
 import java.util.Scanner;
 
 public class MainMenu {
+    private final FlightService flightService;
     public static final BookingController bookingController = new BookingController();
     public static final FlightController flightController = new FlightController();
 
@@ -28,6 +30,7 @@ public class MainMenu {
     static String menuItem = "";
 
     public static void run(){
+        flightController.
 
         while (!menuItem.equals("6")) {
             System.out.print("Будь-ласка виберіть пункт меню: ");
@@ -35,8 +38,9 @@ public class MainMenu {
             switch (menuItem.trim()){
                 case "1":
                     System.out.println("1. Найближчі рейси");
+                    flightController.showAllFlights();
+//                    flightController.showTodayFlights();
                     returnToMainMenu();
-                    flightController.showTodayFlights();
                     break;
                 case "2":
                     System.out.println("2. Інформація про рейс");
