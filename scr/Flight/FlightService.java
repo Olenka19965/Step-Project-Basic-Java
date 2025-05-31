@@ -1,14 +1,22 @@
 package scr.Flight;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class FlightService {
-    private final FlightDAO flightDAO;
+     FlightDAO flightDAO;
+    public FlightService(){
+        this.flightDAO = new FlightDAO();
+    }
     public FlightService(FlightDAO flightDAO){
         this.flightDAO = flightDAO;
     }
-
+    public void generateFlights() throws FileNotFoundException {
+        flightDAO.generateFlights();
+        flightDAO.saveToFile();
+        flightDAO.loadFromFile();
+    }
     public List<FlightObject> getAllFlights(){//всі рейси
 return flightDAO.getAllFlights();
     }

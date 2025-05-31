@@ -1,15 +1,19 @@
 package scr.Flight;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
 import static java.lang.System.out;
 
 public class FlightController {
-  private final FlightService flightService;
+  FlightService flightService;
   private final Scanner scanner = new Scanner(System.in);
-  public FlightController(FlightService flightService){
-      this.flightService=flightService;
+  public FlightController(){
+      this.flightService=new FlightService();
   }
+    public FlightController(FlightService flightService) {
+        this.flightService = flightService;
+    }
   public void run() throws NotFoundException {
       while (true){
           out.println("\n--- Меню ---");
@@ -115,4 +119,7 @@ public void showTodayFlights(){
           System.out.println("На сьогодні немає рейсів.");
       }else todayFlights.forEach(System.out::println);
 }
+    public void generateFlights() throws FileNotFoundException {
+        flightService.generateFlights();
+    }
 }
