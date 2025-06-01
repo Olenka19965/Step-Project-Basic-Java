@@ -21,6 +21,7 @@ public class MainMenu {
                 "| 4. Скасувати бронювання                      |\n" +
                 "| 5. Мої рейси                                 |\n" +
                 "| 6. Вихід                                     |\n" +
+                "| 0. Згенерувати рейси                         |\n" +
                 "_______________________________________________"
         );
         run();
@@ -45,7 +46,11 @@ public class MainMenu {
                     returnToMainMenu();
                     break;
                 case "1":
+<<<<<<< HEAD
+                    System.out.println("1. Найближчі рейси");
+=======
                     System.out.println("1. Найближчі рейси:");
+>>>>>>> 1b9709b4514876e7b2fb294a45379b1ad02fbda1
                     flightController.showTodayFlights();
                     returnToMainMenu();
                     break;
@@ -71,6 +76,11 @@ public class MainMenu {
                     break;
                 case  "5":
                     bookingController.displayAllBookings();
+                    returnToMainMenu();
+                    break;
+                case "0":
+                    flightController.generateFlights();
+                    System.out.println("Рейси згенеровано");
                     returnToMainMenu();
                     break;
                 case "6":

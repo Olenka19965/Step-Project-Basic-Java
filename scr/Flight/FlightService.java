@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FlightService {
-     FlightDAO flightDAO;
+    FlightDAO flightDAO;
     public FlightService(){
         this.flightDAO = new FlightDAO();
     }
@@ -18,7 +18,11 @@ public class FlightService {
         flightDAO.loadFromFile();
     }
     public List<FlightObject> getAllFlights(){//всі рейси
-return flightDAO.getAllFlights();
+        return flightDAO.getAllFlights();
+    }
+
+    public boolean loadFromFile() throws FileNotFoundException {
+        return flightDAO.loadFromFile();
     }
 
     public FlightObject getFlightById(String id)throws NotFoundException{// пошук рейсу по ід
@@ -39,11 +43,11 @@ return flightDAO.getAllFlights();
         flightDAO.saveToFile();
     }
     public List<FlightObject> getTodayFlights(){//рейс на сьогодні
-LocalDate today = LocalDate.now();
-return flightDAO.getAllFlights().stream()
-        .filter(f->f.getDepartureTime().toLocalDate().equals(today))
-        .sorted(Comparator.comparing(f -> f.getDepartureTime()))
-        .collect(Collectors.toList());
+        LocalDate today = LocalDate.now();
+        return flightDAO.getAllFlights().stream()
+                .filter(f->f.getDepartureTime().toLocalDate().equals(today))
+                .sorted(Comparator.comparing(f -> f.getDepartureTime()))
+                .collect(Collectors.toList());
     }
 
 }

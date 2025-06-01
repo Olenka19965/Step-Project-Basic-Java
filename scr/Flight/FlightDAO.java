@@ -27,29 +27,40 @@ public class FlightDAO {
                 flights.add(flightObject);
             }
         }
+
+        System.out.println("Рейси згенеровано");
     }
-    public void saveToFile(){
+    public boolean saveToFile(){
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileFlight))){
             oos.writeObject(flights);
+            return true;
         } catch (IOException e) {
             System.out.println("Помилка запису файлу: " + e.getMessage());
+            return false;
         }
     }
     @SuppressWarnings("unchecked")
-    public void loadFromFile() throws FileNotFoundException {
+    public boolean loadFromFile() throws FileNotFoundException {
         File file = new File(fileFlight);
         if (!file.exists()){
-            generateFlights();
-            saveToFile();
-            return;
-        }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))){
-            flights = (List<FlightObject>) ois.readObject();
-        }catch (IOException | ClassNotFoundException e) {
-            System.out.println("Помилка читання файлу: " + e.getMessage());
-            generateFlights();
+            System.out.println("Файлу немає");
+            return false;
+//            generateFlights();
+//            saveToFile();
+        } else {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))){
+                flights = (List<FlightObject>) ois.readObject();
+                System.out.println("Flight file read");
+                return true;
+            }catch (IOException | ClassNotFoundException e) {
+                System.out.println("Помилка читання файлу: " + e.getMessage());
+//                generateFlights();
+                System.out.println("Неможливо знайти базу даних польотів!");
+                return false;
+            }
         }
     }
+
     public List<FlightObject> getAllFlights() {
         return flights.stream()
                 .sorted(Comparator.comparing(FlightObject::getDepartureTime))
