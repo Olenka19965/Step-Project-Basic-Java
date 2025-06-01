@@ -1,13 +1,16 @@
 package scr.Console;
 
 import scr.BookingDAO.BookingController;
+import scr.Flight.FlightController;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class MainMenu {
     public static final BookingController bookingController = new BookingController();
+    public static final FlightController flightController = new FlightController();
+    public static void mainMenu () throws FileNotFoundException {
 
-    public static void mainMenu () {
         System.out.println("-----------------------------------------------\n" +
                 "|                Головне меню                  |\n" +
                 "_______________________________________________\n" +
@@ -17,6 +20,7 @@ public class MainMenu {
                 "| 4. Скасувати бронювання                      |\n" +
                 "| 5. Мої рейси                                 |\n" +
                 "| 6. Вихід                                     |\n" +
+                "| 0. Згенерувати рейси                         |\n" +
                 "_______________________________________________"
         );
         run();
@@ -25,7 +29,7 @@ public class MainMenu {
     static Scanner scanner = new Scanner(System.in);
     static String menuItem = "";
 
-    public static void run(){
+    public static void run() throws FileNotFoundException {
 
         while (!menuItem.equals("6")) {
             System.out.print("Будь-ласка виберіть пункт меню: ");
@@ -33,18 +37,18 @@ public class MainMenu {
             switch (menuItem.trim()){
                 case "1":
                     System.out.println("1. Найближчі рейси");
+                    flightController.showTodayFlights();
                     returnToMainMenu();
                     break;
                 case "2":
                     System.out.println("2. Інформація про рейс");
+                    flightController.findFlightById();
                     returnToMainMenu();
                     break;
                 case "3":
-
-
-
-
-
+                    System.out.println("Знайти рейс за заданими умовами");
+                    flightController.searchFlights();
+                    returnToMainMenu();
                     break;
                 case "4":
                     bookingController.displayAllBookings();
@@ -66,6 +70,11 @@ public class MainMenu {
                     bookingController.displayAllBookings();
                     returnToMainMenu();
                     break;
+                case "0":
+                    flightController.generateFlights();
+                    System.out.println("Рейси згенеровано");
+                    returnToMainMenu();
+                    break;
                 case "6":
                     break;
                 default:
@@ -75,7 +84,7 @@ public class MainMenu {
         }
     }
 
-    public static void returnToMainMenu (){
+    public static void returnToMainMenu () throws FileNotFoundException {
         System.out.print("Прошу натиснути Enter щоб повернутися до головного меню");
         scanner.nextLine();
         mainMenu();
