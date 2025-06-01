@@ -27,7 +27,6 @@ public class FlightDAO {
                 flights.add(flightObject);
             }
         }
-
         System.out.println("Рейси згенеровано");
     }
     public boolean saveToFile(){

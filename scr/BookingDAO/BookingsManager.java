@@ -29,7 +29,7 @@ public class BookingsManager {
         }
     }
 
-    public  static void saveBookings(List<Booking> bookings) {
+    public static void saveBookings(List<Booking> bookings) {
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(DATA_PATH));
             out.writeObject(bookings);
