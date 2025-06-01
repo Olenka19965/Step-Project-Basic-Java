@@ -1,22 +1,33 @@
 package scr.Flight;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class FlightService {
-    private final FlightDAO flightDAO;
+    FlightDAO flightDAO;
+    public FlightService(){
+        this.flightDAO = new FlightDAO();
+    }
     public FlightService(FlightDAO flightDAO){
         this.flightDAO = flightDAO;
     }
-
+    public void generateFlights() throws FileNotFoundException {
+        flightDAO.generateFlights();
+        flightDAO.saveToFile();
+        flightDAO.loadFromFile();
+    }
     public List<FlightObject> getAllFlights(){//всі рейси
-return flightDAO.getAllFlights();
+        return flightDAO.getAllFlights();
+    }
+
+    public boolean loadFromFile() throws FileNotFoundException {
+        return flightDAO.loadFromFile();
     }
 
     public FlightObject getFlightById(String id)throws NotFoundException{// пошук рейсу по ід
- Optional<FlightObject>flightOpt= flightDAO.getAllFlights().stream()
-        .filter(f->f.getId().equalsIgnoreCase(id)).findFirst();
-         return flightOpt.orElseThrow(()-> new NotFoundException("Рейс з ID " + id + " не знайдено."));
+        return flightDAO.getFlightById(id)
+                .orElseThrow(() -> new NotFoundException("Рейс з ID " + id + " не знайдено."));
     }
 
     public List<FlightObject> searchFlights(String destination, LocalDate date, int passengers) {//пошук рейсу за умовами
@@ -32,10 +43,11 @@ return flightDAO.getAllFlights();
         flightDAO.saveToFile();
     }
     public List<FlightObject> getTodayFlights(){//рейс на сьогодні
-LocalDate today = LocalDate.now();
-return flightDAO.getAllFlights().stream()
-        .filter(f->f.getDepartureTime().toLocalDate().equals(today))
-        .collect(Collectors.toList());
+        LocalDate today = LocalDate.now();
+        return flightDAO.getAllFlights().stream()
+                .filter(f->f.getDepartureTime().toLocalDate().equals(today))
+                .sorted(Comparator.comparing(f -> f.getDepartureTime()))
+                .collect(Collectors.toList());
     }
 
 }

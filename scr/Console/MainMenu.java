@@ -2,19 +2,19 @@ package scr.Console;
 
 import scr.BookingDAO.BookingController;
 import scr.Flight.FlightController;
-import scr.Flight.FlightService;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class MainMenu {
-//    private final FlightService flightService;
     public static final BookingController bookingController = new BookingController();
-//    public static final FlightController flightController = new FlightController();
+    public static final FlightController flightController = new FlightController();
+    public static void mainMenu () throws FileNotFoundException {
 
-    public static void mainMenu () {
         System.out.println("-----------------------------------------------\n" +
                 "|                Головне меню                  |\n" +
-                "_______________________________________________\n" +
+                "|----------------------------------------------|\n" +
+                "| 0. Згенерувати рейси                         |\n" +
                 "| 1. Найближчі рейси                           |\n" +
                 "| 2. Інформація про рейс                       |\n" +
                 "| 3. Пошук та бронювання рейсу                 |\n" +
@@ -29,45 +29,44 @@ public class MainMenu {
     static Scanner scanner = new Scanner(System.in);
     static String menuItem = "";
 
-    public static void run(){
-//        flightController.
+    public static void run() throws FileNotFoundException {
 
         while (!menuItem.equals("6")) {
             System.out.print("Будь-ласка виберіть пункт меню: ");
             menuItem = scanner.nextLine();
             switch (menuItem.trim()){
+                case "0":
+                    if (!flightController.loadFromFile() && flightController.getAllFlights().isEmpty()){
+                        System.out.println("Генерую польоти");
+                        flightController.generateFlights();
+                    } else {
+                        System.out.println("У Вас вже є список згенерованих польотів");
+                    }
+                    returnToMainMenu();
+                    break;
                 case "1":
-                    System.out.println("1. Найближчі рейси");
-//                    flightController.showAllFlights();
-//                    flightController.showTodayFlights();
+                    System.out.println("1. Найближчі рейси:");
+                    flightController.showTodayFlights();
                     returnToMainMenu();
                     break;
                 case "2":
                     System.out.println("2. Інформація про рейс");
+                    flightController.findFlightById();
                     returnToMainMenu();
                     break;
                 case "3":
-
-
-
-
-
-
+                    System.out.println("Знайти рейс за заданими умовами");
+                    flightController.searchFlights();
+                    returnToMainMenu();
                     break;
                 case "4":
-                    bookingController.displayAllBookings();
-                    if (bookingController.getAllBookings().isEmpty()) {
-                        System.out.println("Наразі у вас немає заброньованих рейсів для скасування");
-                    } else {
-                        System.out.print("Ведіть номер бронювання, яке бажаєте скасувати: ");
-                        try {
-                            int flightId = Integer.parseInt(scanner.nextLine());
-                            bookingController.delBookingById(flightId);
-                        } catch (NumberFormatException err) {
-                            System.out.println("Номер бронювання, що Ви ввели не є числом!");
-                        }
+                    System.out.print("Ведіть номер бронювання, яке бажаєте скасувати: ");
+                    try {
+                        int flightId = Integer.parseInt(scanner.nextLine());
+                        bookingController.delBookingById(flightId);
+                    } catch (NumberFormatException err) {
+                        System.out.println("Номер бронювання, що Ви ввели не є числом!");
                     }
-
                     returnToMainMenu();
                     break;
                 case  "5":
@@ -83,7 +82,7 @@ public class MainMenu {
         }
     }
 
-    public static void returnToMainMenu (){
+    public static void returnToMainMenu () throws FileNotFoundException {
         System.out.print("Прошу натиснути Enter щоб повернутися до головного меню");
         scanner.nextLine();
         mainMenu();

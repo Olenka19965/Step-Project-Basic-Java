@@ -2,11 +2,12 @@ package scr.Flight;
 import java.io.*;
 import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FlightDAO {
     private List <FlightObject> flights = new ArrayList<>();
     private static final int TOTAL_SEATS = 50;
-    private static final String fileFlight = "DataBase/flights.dat";
+    private static final String fileFlight = "scr/DataBase/flights.dat";
     public void generateFlights(){
         Random random = new Random();
         FlightObject.Destination[]destinations = FlightObject.Destination.values();
@@ -26,32 +27,44 @@ public class FlightDAO {
                 flights.add(flightObject);
             }
         }
+
+        System.out.println("Рейси згенеровано");
     }
-    public void saveToFile(){
+    public boolean saveToFile(){
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileFlight))){
             oos.writeObject(flights);
+            return true;
         } catch (IOException e) {
             System.out.println("Помилка запису файлу: " + e.getMessage());
+            return false;
         }
     }
     @SuppressWarnings("unchecked")
-    public void loadFromFile() throws FileNotFoundException {
+    public boolean loadFromFile() throws FileNotFoundException {
         File file = new File(fileFlight);
         if (!file.exists()){
-            generateFlights();
-            saveToFile();
-            return;
+            System.out.println("Файлу немає");
+            return false;
+//            generateFlights();
+//            saveToFile();
+        } else {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))){
+                flights = (List<FlightObject>) ois.readObject();
+                System.out.println("Flight file read");
+                return true;
+            }catch (IOException | ClassNotFoundException e) {
+                System.out.println("Помилка читання файлу: " + e.getMessage());
+//                generateFlights();
+                System.out.println("Неможливо знайти базу даних польотів!");
+                return false;
+            }
         }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))){
-flights = (List<FlightObject>) ois.readObject();
-        }catch (IOException | ClassNotFoundException e) {
-            System.out.println("Помилка читання файлу: " + e.getMessage());
-            generateFlights();
-        }
-
     }
-    public List<FlightObject>getAllFlights(){
-        return new ArrayList<>(flights);
+
+    public List<FlightObject> getAllFlights() {
+        return flights.stream()
+                .sorted(Comparator.comparing(FlightObject::getDepartureTime))
+                .collect(Collectors.toList());
     }
     public Optional<FlightObject> getFlightById(String id) {
         return flights.stream()
@@ -66,5 +79,7 @@ flights = (List<FlightObject>) ois.readObject();
             }
         }
     }
-
+    public void addFlight(FlightObject flight) {
+        flights.add(flight);
+    }
 }
