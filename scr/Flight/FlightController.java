@@ -54,8 +54,8 @@ public class FlightController {
                 System.out.println("Рейс з ID " + id + " не знайдено.");
                 return  null;
             }
-
     }
+
     public List<FlightObject> searchFlights(String destination, LocalDate date, int passengers) {
 
 
