@@ -1,11 +1,10 @@
 package scr.Console;
 
-import scr.Booking;
 import scr.BookingDAO.BookingController;
 import scr.Flight.FlightController;
 import scr.Flight.FlightObject;
-import scr.Flight.InvalidDateException;
-import scr.Flight.InvalidDestinationException;
+import scr.Exeption.InvalidDateException;
+import scr.Exeption.InvalidDestinationException;
 import scr.Passenger;
 
 import java.io.FileNotFoundException;
@@ -42,10 +41,10 @@ public class MainMenu {
 
     public static void run() throws FileNotFoundException {
         if (flightController.loadFromFile()) {
-            List<FlightObject> flightObjectList = flightController.getAllFlights();
+            flightController.getAllFlights();
         }
         if (bookingController.loadBookingData()) {
-            List<Booking> bookingList = bookingController.getAllBookings();
+            bookingController.getAllBookings();
         }
 
         while (!menuItem.equals("6")) {
@@ -65,7 +64,6 @@ public class MainMenu {
                         id = scanner.nextLine().trim();
                         if (!id.matches("^FL\\d{4}$")) {
                             System.out.println("Невірний формат ID. Будь ласка, введіть 'FL' і 4 цифри (наприклад FL4959).");
-                            continue;
                         } else break;
                     }
                     flightController.findFlightById(id);
@@ -73,7 +71,7 @@ public class MainMenu {
                     break;
                 case "3":
                     System.out.println("Пошук та бронювання рейсу:");
-                    String destination = null;
+                    String destination;
                     while (true) {
                         try {
                             System.out.print("Місто призначення (англійською мовою): ");

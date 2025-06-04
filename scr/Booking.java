@@ -4,8 +4,12 @@ import scr.Flight.FlightObject;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static scr.Console.MainMenu.bookingController;
 
@@ -39,13 +43,17 @@ public class Booking implements Serializable {
     public Set<Passenger> getPassengers() { return passengers; }
 
     @Override
-    public String toString(){
-        return "Booking {" +
+    public String toString() {
+        List<Passenger> passengerList = new ArrayList<>(passengers);
+        String passengerInfo = IntStream.range(0, passengerList.size())
+                .mapToObj(i -> String.format("%d) %s", i + 1, passengerList.get(i)))
+                .collect(Collectors.joining("\n "));
+
+        return "Booking\n" +
                 " Booking ID = " + id +
                 ", destination = " + destination +
                 ", date = " + date +
-                ", Passengers { " + passengers +
-                " }";
+                ",\n Passengers:\n " + passengerInfo;
     }
 
     @Override

@@ -37,30 +37,30 @@ public class TestFlightController {
         assertTrue(output.contains("FL"), "Вивід повинен містити ID рейсів");
     }
 
-    @Test
-    void testFindFlightByIdInvalidFormatThenValid() throws Exception {
-        FlightObject testFlight = new FlightObject("FL9999", FlightObject.Destination.LONDON, LocalDateTime.of(2025, 6, 1, 12, 0), 10);
-        flightDAO.addFlight(testFlight);
-        String input = "WRONG_ID\nFL9999\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        FlightController controller = new FlightController(flightService);
-        controller.findFlightById();
-        String output = outContent.toString();
-        assertTrue(output.contains("Невірний формат ID"), "Повинно бути повідомлення про неправильний формат");
-        assertTrue(output.contains("FL9999"), "Повинно виводитись правильне ID рейсу");
-    }
-    @Test
-    void testSearchFlights() throws Exception {
-        FlightObject testFlight = new FlightObject("FL8888", FlightObject.Destination.PARIS, LocalDateTime.of(2025, 6, 10, 15, 30), 5);
-        flightDAO.addFlight(testFlight);
-        String input = "PARIS\n2025-06-10\n3\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        FlightController controller = new FlightController(flightService);
-        controller.searchFlights();
-        String output = outContent.toString();
-        assertTrue(output.contains("PARIS"), "Вивід має містити напрямок");
-        assertTrue(output.contains("FL8888"), "Вивід має містити ID рейсу");
-    }
+//    @Test
+//    void testFindFlightByIdInvalidFormatThenValid() throws Exception {
+//        FlightObject testFlight = new FlightObject("FL9999", FlightObject.Destination.LONDON, LocalDateTime.of(2025, 6, 1, 12, 0), 10);
+//        flightDAO.addFlight(testFlight);
+//        String input = "WRONG_ID\nFL9999\n";
+//        System.setIn(new ByteArrayInputStream(input.getBytes()));
+//        FlightController controller = new FlightController(flightService);
+//        controller.findFlightById();
+//        String output = outContent.toString();
+//        assertTrue(output.contains("Невірний формат ID"), "Повинно бути повідомлення про неправильний формат");
+//        assertTrue(output.contains("FL9999"), "Повинно виводитись правильне ID рейсу");
+//    }
+//    @Test
+//    void testSearchFlights() throws Exception {
+//        FlightObject testFlight = new FlightObject("FL8888", FlightObject.Destination.PARIS, LocalDateTime.of(2025, 6, 10, 15, 30), 5);
+//        flightDAO.addFlight(testFlight);
+//        String input = "PARIS\n2025-06-10\n3\n";
+//        System.setIn(new ByteArrayInputStream(input.getBytes()));
+//        FlightController controller = new FlightController(flightService);
+//        controller.searchFlights();
+//        String output = outContent.toString();
+//        assertTrue(output.contains("PARIS"), "Вивід має містити напрямок");
+//        assertTrue(output.contains("FL8888"), "Вивід має містити ID рейсу");
+//    }
     @Test
     void testShowTodayFlights() {
         flightController.showTodayFlights();

@@ -5,7 +5,6 @@ import scr.Booking;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CollectionBookingDao implements BookingDAO {
     private List<Booking> bookings = new ArrayList<>();
@@ -13,20 +12,21 @@ public class CollectionBookingDao implements BookingDAO {
 
     public List<Booking> getAllBookings() { return bookings; }
     public Booking getBookingById (int id) {
-        if (id >= 0 && id < bookings.size()) return bookings.get(id);
-        return null;
+        return bookings.stream()
+                .filter(booking -> booking.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     public Boolean deleteBookingById (int id) {
-        if (id >= 0 ) {
-            bookings = bookings.stream()
-                    .filter(booking -> id != booking.getId())
-                    .collect(Collectors.toCollection(ArrayList::new));
+        boolean  isDeleted = bookings.removeIf(booking -> booking.getId() == id);
+
+        if (isDeleted) {
             System.out.printf("Бронювання з ID %d скасовано!\n", id);
             saveBookingToFile();
             return true;
         } else {
-            System.out.printf("Бронювання з номером %d не знайдено!\n", id);
+            System.out.printf("Бронювання з ID %d не знайдено!\n", id);
             return false;
         }
     }

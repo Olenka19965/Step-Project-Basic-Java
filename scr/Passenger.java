@@ -20,10 +20,7 @@ public class Passenger implements Serializable {
 
     @Override
     public String toString(){
-        return "Passenger {" +
-                " name = " + name +
-                ", surname = " + surname +
-                " }";
+        return "Passenger: " + name + " " + surname;
     }
 
     @Override

@@ -1,9 +1,12 @@
 package scr.Flight;
 
+import scr.Exeption.InvalidDateException;
+import scr.Exeption.InvalidDestinationException;
+import scr.Exeption.NotFoundException;
+
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
-import static scr.Console.MainMenu.scanner;
 
 public class FlightController {
     FlightService flightService;
@@ -57,9 +60,6 @@ public class FlightController {
     }
 
     public List<FlightObject> searchFlights(String destination, LocalDate date, int passengers) {
-
-
-
         List<FlightObject> results = flightService.searchFlights(destination, date, passengers);
         if (results.isEmpty()) {
             System.out.println("Рейсів не знайдено.");
