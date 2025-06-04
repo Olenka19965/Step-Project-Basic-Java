@@ -1,7 +1,6 @@
 package scr;
 
 import scr.Flight.FlightObject;
-import scr.Passenger;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,13 +16,8 @@ public class Booking implements Serializable {
     private LocalDate date;
     private Set<Passenger> passengers;
 
-    private static int idCounter = bookingController.getAllBookings().stream()
-        .mapToInt(Booking::getId)
-        .max()
-        .orElse(0) + 1;
-
     public Booking (FlightObject flight, Set<Passenger> passengers) {
-        this.id = idCounter++;
+        this.id = bookingController.getMaxIdCounter();
         this.destination = flight.getDestination();
         this.flightId = flight.getId();
         this.date = flight.getDepartureTime().toLocalDate();
@@ -47,7 +41,7 @@ public class Booking implements Serializable {
     @Override
     public String toString(){
         return "Booking {" +
-                " id = " + id +
+                " Booking ID = " + id +
                 ", destination = " + destination +
                 ", date = " + date +
                 ", Passengers { " + passengers +

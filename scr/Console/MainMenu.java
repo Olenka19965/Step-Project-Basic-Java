@@ -138,7 +138,7 @@ public class MainMenu {
                     if (bookingController.getAllBookings().isEmpty()) {
                         System.out.println("Наразі у вас немає заброньованих рейсів для скасування");
                     } else {
-                        System.out.print("Ведіть номер бронювання, яке бажаєте скасувати: ");
+                        System.out.print("Ведіть ID бронювання, яке бажаєте скасувати: ");
                         try {
                             int bookingId = Integer.parseInt(scanner.nextLine());
                             bookingController.delBookingById(bookingId);

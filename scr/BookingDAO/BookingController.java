@@ -21,6 +21,8 @@ public class BookingController {
         return bookingService.createNewBooking(flight, passengers);
     }
 
+    public int getMaxIdCounter () { return bookingService.getMaxIdCounter();}
+
     public Booking getBookingById(int id) { return bookingService.getBookingById(id); }
 
     public boolean delBookingById (int id){ return bookingService.delBookingById(id); }

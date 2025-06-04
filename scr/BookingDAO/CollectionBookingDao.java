@@ -26,7 +26,8 @@ public class CollectionBookingDao implements BookingDAO {
             saveBookingToFile();
             return true;
         } else {
-            System.out.printf("Бронювання з номером %d не знайдено!\n", id);            return false;
+            System.out.printf("Бронювання з номером %d не знайдено!\n", id);
+            return false;
         }
     }
 

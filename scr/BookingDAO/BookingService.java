@@ -4,13 +4,10 @@ import scr.Booking;
 import scr.Flight.FlightObject;
 import scr.Passenger;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static scr.Console.MainMenu.bookingController;
 
 public class BookingService {
 
@@ -39,6 +36,13 @@ public class BookingService {
             System.out.println("Неможливо створити бронювання");;
             return false;
         }
+    }
+
+    public int getMaxIdCounter(){
+        return serviceBookings.getAllBookings().stream()
+                .mapToInt(Booking::getId)
+                .max()
+                .orElse(0) + 1;
     }
 
     public Booking getBookingById(int id) { return serviceBookings.getBookingById(id); }
