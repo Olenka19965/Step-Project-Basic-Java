@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
 
+import static scr.Flight.FlightController.parseDate;
+
 public class MainMenu {
     public static final BookingController bookingController = new BookingController();
     public static final FlightController flightController = new FlightController();
@@ -77,6 +79,7 @@ public class MainMenu {
                             System.out.println("Неправильний ввід. Введіть назву міста англійськими літерами.");
                         }
                     }
+
                     LocalDate date;
                     while (true) {
                         System.out.print("Введіть дату польоту в заданому форматі (yyyy-mm-dd): ");
@@ -88,6 +91,7 @@ public class MainMenu {
                             System.out.println("Помилка: " + e.getMessage());
                         }
                     }
+
                     int passengers;
                     while (true) {
                         System.out.print("Введіть кількість квитків, бажаєте забронювати: ");
@@ -96,7 +100,6 @@ public class MainMenu {
                             passengers = Integer.parseInt(passengersStr);
                             if (passengers <= 0) {
                                 System.out.println("Кількість пасажирів має бути більшою за 0.");
-
                                 continue;
                             }
                             break;
@@ -104,25 +107,36 @@ public class MainMenu {
                             System.out.println("Кількість пасажирів має бути числом.");
                         }
                     }
+
                     List<FlightObject> flightsForBookingList = flightController.searchFlights(destination, date, passengers);
                     if (flightsForBookingList.isEmpty()) {
                         System.out.println("Рейсів за вашими умовами не знайдено");
                         returnToMainMenu();
                         break;
                     } else {
+                        System.out.println("Знайдені рейси:");
+                        flightsForBookingList.forEach(System.out::println);
                         System.out.print("Введіть ID рейсу, на який бажаєте забронювати квитки: ");
-                        String flightId = scanner.nextLine();
-                        FlightObject flightForBooking = flightController.findFlightById(flightId);
+                        String flightId = scanner.nextLine().trim();
+                        FlightObject flightForBooking;
+                        try {
+                            flightForBooking = flightController.findFlightById(flightId);
+                        } catch (NotFoundException e) {
+                            System.out.println("Рейс з ID " + flightId + " не знайдено.");
+                            returnToMainMenu();
+                            break;
+                        }
 
                         Set<Passenger> passengersForBooking = new HashSet<>();
-                        for (int i = 0; i < passengers; i++){
-                            System.out.printf("Введіть ім'я %d-го пасажира: ",  i + 1);
+                        for (int i = 0; i < passengers; i++) {
+                            System.out.printf("Введіть ім'я %d-го пасажира: ", i + 1);
                             String name = scanner.nextLine();
-                            System.out.printf("Введіть прізвище %d-го пасажира: ",  i + 1);
+                            System.out.printf("Введіть прізвище %d-го пасажира: ", i + 1);
                             String surname = scanner.nextLine();
                             passengersForBooking.add(new Passenger(name, surname));
                         }
-                        bookingController.createNewBooking(flightForBooking,passengersForBooking);
+
+                        bookingController.createNewBooking(flightForBooking, passengersForBooking);
                         bookingController.saveBookingToFile();
                     }
                     returnToMainMenu();
