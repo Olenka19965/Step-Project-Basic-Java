@@ -1,6 +1,8 @@
 package scr.Console;
 import scr.Booking;
 import scr.BookingDAO.BookingController;
+import scr.Exeption.InvalidDateException;
+import scr.Exeption.NotFoundException;
 import scr.Passenger;
 import scr.Flight.*;
 
@@ -8,10 +10,12 @@ import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
 
+import static scr.Flight.FlightController.parseDate;
+
 public class MainMenu {
     public static final BookingController bookingController = new BookingController();
     public static final FlightController flightController = new FlightController();
-    public static void mainMenu () throws FileNotFoundException {
+    public static void mainMenu () throws FileNotFoundException, NotFoundException {
 
         System.out.println("________________________________________________\n" +
                 "|                Головне меню                  |\n" +
@@ -31,7 +35,7 @@ public class MainMenu {
     public static Scanner scanner = new Scanner(System.in);
     static String menuItem = "";
 
-    public static void run() throws FileNotFoundException {
+    public static void run() throws FileNotFoundException, NotFoundException {
         if (flightController.loadFromFile()) {
             List<FlightObject> flightObjectList = flightController.getAllFlights();
         }
@@ -69,7 +73,7 @@ public class MainMenu {
                 case "3":
                     String destination;
                     while (true) {
-                        System.out.print("Куди летимо (місто англійською): ");
+                        System.out.print("Введіть пункт призначення (місто англійською): ");
                         destination = scanner.nextLine().trim();
                         if (destination.matches("[a-zA-Z]+")) {
                             break;
@@ -110,6 +114,7 @@ public class MainMenu {
                         returnToMainMenu();
                         break;
                     } else {
+                        System.out.println(flightsForBookingList);
                         System.out.print("Введіть ID рейсу, на який бажаєте забронювати квитки: ");
                         String flightId = scanner.nextLine();
                         FlightObject flightForBooking = flightController.findFlightById(flightId);
@@ -158,7 +163,7 @@ public class MainMenu {
         }
     }
 
-    public static void returnToMainMenu() throws FileNotFoundException {
+    public static void returnToMainMenu() throws FileNotFoundException, NotFoundException {
         System.out.print("Прошу натиснути Enter щоб повернутися до головного меню ");
         scanner.nextLine();
         mainMenu();
