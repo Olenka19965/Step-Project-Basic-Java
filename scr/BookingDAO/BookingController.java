@@ -1,6 +1,7 @@
 package scr.BookingDAO;
 
 import scr.Booking;
+import scr.Flight.FlightObject;
 import scr.Passenger;
 
 import java.time.LocalDate;
@@ -16,13 +17,17 @@ public class BookingController {
 
     public void displayAllBookings() { bookingService.displayAllBookings();}
 
-    public void createNewBooking (String destination, int flightId, LocalDate date, Set<Passenger> passengers) {
-        bookingService.createNewBooking(destination, flightId, date, passengers);
+    public boolean createNewBooking (FlightObject flight, Set<Passenger> passengers) {
+        return bookingService.createNewBooking(flight, passengers);
     }
+
+    public int getMaxIdCounter () { return bookingService.getMaxIdCounter();}
 
     public Booking getBookingById(int id) { return bookingService.getBookingById(id); }
 
-    public Boolean delBookingById (int id){ return bookingService.delBookingById(id); }
+    public boolean delBookingById (int id){ return bookingService.delBookingById(id); }
 
-    public void loadBookingData(List<Booking> bookings) { bookingService.loadBookingData(bookings);}
+    public boolean loadBookingData() { return bookingService.loadBookingData();}
+
+    public boolean saveBookingToFile(){ return bookingService.saveBookingToFile(); }
 }

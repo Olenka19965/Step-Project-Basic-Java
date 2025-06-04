@@ -9,6 +9,6 @@ public interface BookingDAO {
     Booking getBookingById (int id);
     Boolean deleteBookingById (int id);
     Boolean deleteBookingByBooking (Booking booking);
-    void saveBooking(Booking booking);
-    void loadBooking(List<Booking> bookings);
+    boolean saveBooking(Booking booking);
+//    boolean loadBooking();
 }

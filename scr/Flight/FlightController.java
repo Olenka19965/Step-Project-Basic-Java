@@ -3,6 +3,7 @@ package scr.Flight;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
+import static scr.Console.MainMenu.scanner;
 
 public class FlightController {
     FlightService flightService;
@@ -13,7 +14,7 @@ public class FlightController {
         this.flightService = flightService;
     }
 
-    public List<FlightObject> getAllFlights() {
+  public List<FlightObject> getAllFlights() {
         return flightService.getAllFlights();
     }
 
@@ -21,21 +22,49 @@ public class FlightController {
         List<FlightObject>flights = flightService.getAllFlights();
         flights.forEach(System.out :: println);
     }
+  
+    public FlightObject findFlightById(String id) {
+
+            try {FlightObject flightObject = flightService.getFlightById(id);
+                System.out.println(flightObject);
+                return  flightObject;
+                } catch (NotFoundException e) {
+                System.out.println("Рейс з ID " + id + " не знайдено.");
+                return  null;
+            }
+    }
+     public List<FlightObject> searchFlights(String destination, LocalDate date, int passengers) {
+            List<FlightObject> results = flightService.searchFlights(destination, date, passengers);
+            if (results.isEmpty()) {
+                System.out.println("Рейсів не знайдено.");
+            } else {
+                results.forEach(System.out::println);
+            }
+            return results;
+        }
 
         public FlightObject findFlightById(String id) throws NotFoundException {
             return flightService.getFlightById(id);
         }
-
+      
     public List<FlightObject> searchFlights(String destination, LocalDate date, int passengers) {
         return flightService.searchFlights(destination, date, passengers);
     }
-    private LocalDate parseDate(String dateStr) throws InvalidDateException {
+      
+    public static LocalDate parseDate(String dateStr) throws InvalidDateException {
         try {
             return LocalDate.parse(dateStr);
         } catch (Exception e) {
             throw new InvalidDateException("Неправильний формат дати. Використовуйте yyyy-mm-dd.");
         }
     }
+
+      public static void validateDestination(String destination) throws InvalidDestinationException {
+        if (!destination.matches("[a-zA-Z]+")) {
+            throw new InvalidDestinationException("Ви ввели назву міста не вірно, введіть назву міста англійською.");
+        }
+    }
+
     public void showTodayFlights(){
         List <FlightObject> todayFlights = flightService.getTodayFlights();
         if (todayFlights.isEmpty()){

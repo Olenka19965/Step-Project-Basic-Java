@@ -1,40 +1,36 @@
 package scr;
 
-import scr.Passenger;
+import scr.Flight.FlightObject;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
 
 import static scr.Console.MainMenu.bookingController;
 
-public class Booking {
+public class Booking implements Serializable {
     private final int id;
-    private String destination;
-    private int flightId;
+    private FlightObject.Destination destination;
+    private String flightId;
     private LocalDate date;
     private Set<Passenger> passengers;
 
-    private static int idCounter = bookingController.getAllBookings().stream()
-        .mapToInt(Booking::getId)
-        .max()
-        .orElse(0) + 1;
-
-    public Booking (String destination, int flightId, LocalDate date, Set<Passenger> passengers) {
-        this.id = idCounter++;
-        this.destination = destination;
-        this.flightId = flightId;
-        this.date = date;
+    public Booking (FlightObject flight, Set<Passenger> passengers) {
+        this.id = bookingController.getMaxIdCounter();
+        this.destination = flight.getDestination();
+        this.flightId = flight.getId();
+        this.date = flight.getDepartureTime().toLocalDate();
         this.passengers = passengers;
     }
 
     public int getId() { return id; }
 
-    public void setDestination(String destination) { this.destination = destination; }
-    public String getDestination() { return destination; }
+    public void setDestination(FlightObject.Destination destination) { this.destination = destination; }
+    public FlightObject.Destination getDestination() { return destination; }
 
-    public void setFlightId(int flightId) { this.flightId = flightId; }
-    public int getFlightId() { return flightId; }
+    public void setFlightId(String flightId) { this.flightId = flightId; }
+    public String getFlightId() { return flightId; }
 
     public void setDate(LocalDate date) { this.date = date; }
     public LocalDate getDate() { return date; }
@@ -45,7 +41,7 @@ public class Booking {
     @Override
     public String toString(){
         return "Booking {" +
-                " id = " + id +
+                " Booking ID = " + id +
                 ", destination = " + destination +
                 ", date = " + date +
                 ", Passengers { " + passengers +

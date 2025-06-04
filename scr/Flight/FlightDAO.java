@@ -27,7 +27,6 @@ public class FlightDAO {
                 flights.add(flightObject);
             }
         }
-
         System.out.println("Рейси згенеровано");
     }
     public boolean saveToFile(){
@@ -43,19 +42,15 @@ public class FlightDAO {
     public boolean loadFromFile() throws FileNotFoundException {
         File file = new File(fileFlight);
         if (!file.exists()){
-            System.out.println("Файлу немає");
+            System.out.println("Файлу з польотами немає!");
             return false;
-//            generateFlights();
-//            saveToFile();
         } else {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))){
                 flights = (List<FlightObject>) ois.readObject();
                 System.out.println("Flight file read");
                 return true;
             }catch (IOException | ClassNotFoundException e) {
-                System.out.println("Помилка читання файлу: " + e.getMessage());
-//                generateFlights();
-                System.out.println("Неможливо знайти базу даних польотів!");
+                System.out.println("Неможливо прочитати базу даних польотів! " + e.getMessage());
                 return false;
             }
         }
