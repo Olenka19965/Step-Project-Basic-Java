@@ -1,21 +1,12 @@
 package scr.Console;
-
 import scr.Booking;
 import scr.BookingDAO.BookingController;
-import scr.Flight.FlightController;
-import scr.Flight.FlightObject;
-import scr.Flight.InvalidDateException;
-import scr.Flight.InvalidDestinationException;
 import scr.Passenger;
+import scr.Flight.*;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
-
-import static scr.Flight.FlightController.*;
+import java.util.*;
 
 public class MainMenu {
     public static final BookingController bookingController = new BookingController();
@@ -58,30 +49,32 @@ public class MainMenu {
                     returnToMainMenu();
                     break;
                 case "2":
-                    System.out.println("2. Інформація про рейс");
-                    String id;
                     while (true) {
-                        System.out.println("Введіть ID рейсу (формат: FL + 4 цифри, наприклад FL4959): ");
-                        id = scanner.nextLine().trim();
+                        System.out.print("Введіть ID рейсу (формат: FL + 4 цифри, наприклад FL4959): ");
+                        String id = scanner.nextLine().trim();
                         if (!id.matches("^FL\\d{4}$")) {
-                            System.out.println("Невірний формат ID. Будь ласка, введіть 'FL' і 4 цифри (наприклад FL4959).");
+                            System.out.println("Невірний формат ID. Спробуйте ще раз.");
                             continue;
-                        } else break;
+                        }
+                        try {
+                            FlightObject flightObject = flightController.findFlightById(id);
+                            System.out.println(flightObject);
+                            break;
+                        } catch (NotFoundException e) {
+                            System.out.println("Рейс з ID " + id + " не знайдено.");
+                        }
                     }
-                    flightController.findFlightById(id);
                     returnToMainMenu();
                     break;
                 case "3":
-                    System.out.println("Пошук та бронювання рейсу:");
-                    String destination = null;
+                    String destination;
                     while (true) {
-                        try {
-                            System.out.print("Місто призначення (англійською мовою): ");
-                            destination = scanner.nextLine().trim();
-                            validateDestination(destination);
+                        System.out.print("Куди летимо (місто англійською): ");
+                        destination = scanner.nextLine().trim();
+                        if (destination.matches("[a-zA-Z]+")) {
                             break;
-                        } catch (InvalidDestinationException e) {
-                            System.out.println(e.getMessage());
+                        } else {
+                            System.out.println("Неправильний ввід. Введіть назву міста англійськими літерами.");
                         }
                     }
                     LocalDate date;
@@ -102,7 +95,8 @@ public class MainMenu {
                         try {
                             passengers = Integer.parseInt(passengersStr);
                             if (passengers <= 0) {
-                                System.out.println("Кількість пасажирів має бути додатнім числом.");
+                                System.out.println("Кількість пасажирів має бути більшою за 0.");
+
                                 continue;
                             }
                             break;
@@ -146,7 +140,6 @@ public class MainMenu {
                             System.out.println("Номер бронювання, що Ви ввели не є числом!");
                         }
                     }
-
                     returnToMainMenu();
                     break;
                 case "5":
@@ -161,7 +154,6 @@ public class MainMenu {
                     break;
                 default:
                     System.out.println("Ви ввели невірний номер меню! Будь-ласка введіть уважно!");
-
             }
         }
     }
