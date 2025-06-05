@@ -17,7 +17,7 @@ public class TestFlightDAO {
     @Test
     void testGenerateFlights() {
         flightDAO.generateFlights();
-       List<FlightObject> flights = flightDAO.getAllFlights();
+        List<FlightObject> flights = flightDAO.getAllFlights();
         assertFalse(flights.isEmpty(), "Список рейсів не має бути порожнім після генерації");
         long uniqueIds = flights.stream().map(FlightObject::getId).distinct().count();
         assertEquals(flights.size(), uniqueIds, "ID рейсів мають бути унікальними");
@@ -31,7 +31,7 @@ public class TestFlightDAO {
         assertEquals("FL9999", found.get().getId());
     }
     @Test
-   void testUpdateFlight() {
+    void testUpdateFlight() {
         FlightObject flight = new FlightObject("FL1234", FlightObject.Destination.LONDON, LocalDateTime.now(), 3);
         flightDAO.addFlight(flight);
         FlightObject updatedFlight = new FlightObject("FL1234", FlightObject.Destination.LONDON, flight.getDepartureTime(), 10);
@@ -58,7 +58,7 @@ public class TestFlightDAO {
         flightDAO.generateFlights();
         List<FlightObject> flights = flightDAO.getAllFlights();
         for (int i = 1; i < flights.size(); i++) {
-            assertFalse(flights.get(i).getDepartureTime().isBefore(flights.get(i - 1).getDepartureTime()),
+            assertFalse(flights.get(i).getDepartureTime().isBefore(flights.get(i-1).getDepartureTime()),
                     "Рейси повинні бути відсортовані за часом вильоту");
         }
     }
