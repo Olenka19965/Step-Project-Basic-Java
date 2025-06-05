@@ -1,6 +1,5 @@
 package org.example.Console;
 
-
 import org.example.Booking;
 import org.example.BookingDAO.BookingController;
 import org.example.Exeption.InvalidDateException;
@@ -8,13 +7,10 @@ import org.example.Exeption.NotFoundException;
 import org.example.Flight.FlightController;
 import org.example.Flight.FlightObject;
 import org.example.Passenger;
-
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
-
 import static org.example.Flight.FlightController.parseDate;
-
 
 public class MainMenu {
     public static final BookingController bookingController = new BookingController();
