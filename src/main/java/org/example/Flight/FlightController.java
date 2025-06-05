@@ -26,26 +26,6 @@ public class FlightController {
         flights.forEach(System.out :: println);
     }
 
-//    public FlightObject findFlightById(String id) {
-//
-//        try {FlightObject flightObject = flightService.getFlightById(id);
-//            System.out.println(flightObject);
-//            return  flightObject;
-//        } catch (NotFoundException e) {
-//            System.out.println("Рейс з ID " + id + " не знайдено.");
-//            return  null;
-//        }
-//    }
-//    public List<FlightObject> searchFlights(String destination, LocalDate date, int passengers) {
-//        List<FlightObject> results = flightService.searchFlights(destination, date, passengers);
-//        if (results.isEmpty()) {
-//            System.out.println("Рейсів не знайдено.");
-//        } else {
-//            results.forEach(System.out::println);
-//        }
-//        return results;
-//    }
-
     public FlightObject findFlightById(String id) throws NotFoundException {
         return flightService.getFlightById(id);
     }

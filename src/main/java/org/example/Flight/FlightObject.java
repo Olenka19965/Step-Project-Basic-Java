@@ -3,11 +3,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class FlightObject implements Serializable {
-    private String id; // Унікальний ID рейсу
-    private Destination destination; // Місто призначення (енам)
-    private LocalDateTime departureTime; // Дата та час вильоту (рандом 1-30)
-    private final int totalSeats = 50; // Загальна кількість місць (50 файнл)
-    private int availableSeats; // Кількість доступних місць(рандом 2-6)
+    private String id;
+    private Destination destination;
+    private LocalDateTime departureTime;
+    private final int totalSeats = 50;
+    private int availableSeats;
 
     public enum Destination {
         PARIS, ROME, LONDON, MADRID, BERLIN, AMSTERDAM, BARCELONA, MILAN, VIENNA, PRAGUE, LISBON, BRUSSELS,

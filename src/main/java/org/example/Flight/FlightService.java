@@ -1,7 +1,6 @@
 package org.example.Flight;
 
 import org.example.Exeption.NotFoundException;
-
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
@@ -28,7 +27,7 @@ public class FlightService {
         return flightDAO.loadFromFile();
     }
 
-    public FlightObject getFlightById(String id)throws NotFoundException {// пошук рейсу по ід
+    public FlightObject getFlightById(String id)throws NotFoundException {
         return flightDAO.getFlightById(id)
                 .orElseThrow(() -> new NotFoundException("Рейс з ID " + id + " не знайдено."));
     }
@@ -41,11 +40,11 @@ public class FlightService {
                 .collect(Collectors.toList());
 
     }
-    public void updateFlightAndSave(FlightObject updatedFlight){//оновлення рейсу
+    public void updateFlightAndSave(FlightObject updatedFlight){
         flightDAO.updateFlight(updatedFlight);
         flightDAO.saveToFile();
     }
-    public List<FlightObject> getTodayFlights(){//рейс на сьогодні
+    public List<FlightObject> getTodayFlights(){
         LocalDate today = LocalDate.now();
         return flightDAO.getAllFlights().stream()
                 .filter(f->f.getDepartureTime().toLocalDate().equals(today))
