@@ -13,6 +13,8 @@ public class FlightObject implements Serializable {
         PARIS, ROME, LONDON, MADRID, BERLIN, AMSTERDAM, BARCELONA, MILAN, VIENNA, PRAGUE, LISBON, BRUSSELS,
         STOCKHOLM, MUNICH, DUBLIN, BUDAPEST, ATHENS, COPENHAGEN, ZURICH, HELSINKI
     }
+
+    public FlightObject(){} //For test
     public FlightObject(String id, Destination destination, LocalDateTime departureTime,int availableSeats){
         this.id = id;
         this.destination = destination;

@@ -8,86 +8,99 @@
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //
-//
-//import java.util.*;
+//import java.util.List;
+//import java.util.Set;
 //
 //import static org.junit.jupiter.api.Assertions.*;
+//import static org.mockito.Mockito.*;
 //
-//class BookingControllerTest {
+//class TestBookingController {
 //
-//    private BookingController bookingController;
 //    private BookingService bookingServiceMock;
+//    private BookingController controller;
 //
 //    @BeforeEach
 //    void setUp() {
 //        bookingServiceMock = mock(BookingService.class);
-//        bookingController = new BookingController();
-//        // reflection to inject mock (optional but useful if not using constructor injection)
-//        try {
-//            var field = BookingController.class.getDeclaredField("bookingService");
-//            field.setAccessible(true);
-//            field.set(bookingController, bookingServiceMock);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
+//        controller = new BookingController() {
+//            {
+//                this.bookingService = bookingServiceMock;
+//            }
+//        };
 //    }
 //
 //    @Test
 //    void testGetAllBookings() {
-//        List<Booking> mockList = new ArrayList<>();
-//        when(bookingServiceMock.getAllBookings()).thenReturn(mockList);
+//        Booking booking = new Booking();
+//        booking.setId(1);
+//        when(bookingServiceMock.getAllBookings()).thenReturn(List.of(booking));
 //
-//        List<Booking> result = bookingController.getAllBookings();
-//        assertNotNull(result);
-//        assertEquals(mockList, result);
+//        List<Booking> result = controller.getAllBookings();
+//
+//        assertEquals(1, result.size());
+//        assertEquals(1, result.getFirst().getId());
 //        verify(bookingServiceMock).getAllBookings();
 //    }
 //
 //    @Test
-//    void testCreateNewBooking() {
-//        FlightObject mockFlight = mock(FlightObject.class);
-//        Set<Passenger> passengers = new HashSet<>();
-//        when(bookingServiceMock.createNewBooking(mockFlight, passengers)).thenReturn(true);
+//    void testDisplayAllBookings() {
+//        controller.displayAllBookings();
+//        verify(bookingServiceMock).displayAllBookings();
+//    }
 //
-//        boolean result = bookingController.createNewBooking(mockFlight, passengers);
+//    @Test
+//    void testCreateNewBooking() {
+//        FlightObject flight = new FlightObject();
+//        Passenger passenger = new Passenger();
+//        Set<Passenger> passengers = Set.of(passenger);
+//
+//        when(bookingServiceMock.createNewBooking(flight, passengers)).thenReturn(true);
+//
+//        boolean result = controller.createNewBooking(flight, passengers);
+//
 //        assertTrue(result);
-//        verify(bookingServiceMock).createNewBooking(mockFlight, passengers);
+//        verify(bookingServiceMock).createNewBooking(flight, passengers);
 //    }
 //
 //    @Test
 //    void testGetMaxIdCounter() {
 //        when(bookingServiceMock.getMaxIdCounter()).thenReturn(42);
 //
-//        int result = bookingController.getMaxIdCounter();
+//        int result = controller.getMaxIdCounter();
+//
 //        assertEquals(42, result);
 //        verify(bookingServiceMock).getMaxIdCounter();
 //    }
 //
 //    @Test
 //    void testGetBookingById() {
-//        Booking mockBooking = mock(Booking.class);
-//        when(bookingServiceMock.getBookingById(1)).thenReturn(mockBooking);
+//        Booking booking = new Booking();
+//        booking.setId(5);
+//        when(bookingServiceMock.getBookingById(5)).thenReturn(booking);
 //
-//        Booking result = bookingController.getBookingById(1);
+//        Booking result = controller.getBookingById(5);
+//
 //        assertNotNull(result);
-//        assertEquals(mockBooking, result);
-//        verify(bookingServiceMock).getBookingById(1);
+//        assertEquals(5, result.getId());
+//        verify(bookingServiceMock).getBookingById(5);
 //    }
 //
 //    @Test
 //    void testDelBookingById() {
-//        when(bookingServiceMock.delBookingById(1)).thenReturn(true);
+//        when(bookingServiceMock.delBookingById(7)).thenReturn(true);
 //
-//        boolean result = bookingController.delBookingById(1);
+//        boolean result = controller.delBookingById(7);
+//
 //        assertTrue(result);
-//        verify(bookingServiceMock).delBookingById(1);
+//        verify(bookingServiceMock).delBookingById(7);
 //    }
 //
 //    @Test
 //    void testLoadBookingData() {
 //        when(bookingServiceMock.loadBookingData()).thenReturn(true);
 //
-//        boolean result = bookingController.loadBookingData();
+//        boolean result = controller.loadBookingData();
+//
 //        assertTrue(result);
 //        verify(bookingServiceMock).loadBookingData();
 //    }
@@ -96,14 +109,9 @@
 //    void testSaveBookingToFile() {
 //        when(bookingServiceMock.saveBookingToFile()).thenReturn(true);
 //
-//        boolean result = bookingController.saveBookingToFile();
+//        boolean result = controller.saveBookingToFile();
+//
 //        assertTrue(result);
 //        verify(bookingServiceMock).saveBookingToFile();
-//    }
-//
-//    @Test
-//    void testDisplayAllBookings() {
-//        bookingController.displayAllBookings();
-//        verify(bookingServiceMock).displayAllBookings();
 //    }
 //}
