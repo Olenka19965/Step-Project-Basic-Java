@@ -1,7 +1,9 @@
 package org.example.Flight;
 
 import org.example.Exeption.InvalidDateException;
+import org.example.Exeption.InvalidDestinationException;
 import org.example.Exeption.NotFoundException;
+
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
@@ -39,6 +41,13 @@ public class FlightController {
             throw new InvalidDateException("Неправильний формат дати. Використовуйте yyyy-mm-dd.");
         }
     }
+
+    public static void validateDestination(String destination) throws InvalidDestinationException {
+        if (!destination.matches("[a-zA-Z]+")) {
+            throw new InvalidDestinationException("Ви ввели назву міста не вірно, введіть назву міста англійською.");
+        }
+    }
+
     public void showTodayFlights(){
         List <FlightObject> todayFlights = flightService.getTodayFlights();
         if (todayFlights.isEmpty()){
