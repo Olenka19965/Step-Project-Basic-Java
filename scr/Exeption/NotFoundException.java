@@ -1,4 +1,4 @@
-package scr.Flight;
+package scr.Exeption;
 
 public class NotFoundException extends Exception {
     public NotFoundException(String message) {

@@ -1,4 +1,6 @@
 package scr.Flight;
+import scr.Exeption.NotFoundException;
+
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
@@ -25,7 +27,7 @@ public class FlightService {
         return flightDAO.loadFromFile();
     }
 
-    public FlightObject getFlightById(String id)throws NotFoundException{// пошук рейсу по ід
+    public FlightObject getFlightById(String id)throws NotFoundException {// пошук рейсу по ід
         return flightDAO.getFlightById(id)
                 .orElseThrow(() -> new NotFoundException("Рейс з ID " + id + " не знайдено."));
     }

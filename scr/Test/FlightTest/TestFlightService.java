@@ -1,6 +1,7 @@
 package scr.Test.FlightTest;
 
 import org.junit.jupiter.api.*;
+import scr.Exeption.NotFoundException;
 import scr.Flight.*;
 import java.time.*;
 import java.util.List;
