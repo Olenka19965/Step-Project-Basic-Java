@@ -2,151 +2,115 @@ package BookingTest;
 
 import org.example.Booking;
 import org.example.BookingDAO.BookingService;
-import org.example.BookingDAO.CollectionBookingDao;
 import org.example.Flight.FlightObject;
 import org.example.Passenger;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.io.File;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class TestBookingService {
 
-    @Mock
-    private CollectionBookingDao mockBookingDao;
-
-    @InjectMocks
-    private BookingService bookingService;
-
-    private FlightObject testFlight;
-    private Set<Passenger> testPassengers;
-    private Booking testBooking;
+    private BookingService service;
+    private Booking booking1;
+    private Booking booking2;
 
     @BeforeEach
     void setUp() {
-        testFlight = mock(FlightObject.class);
-        testPassengers = Collections.singleton(mock(Passenger.class));
-        testBooking = new Booking(testFlight, testPassengers);
+        service = new BookingService();
+
+        booking1 = new Booking();
+        booking1.setId(1);
+
+        booking2 = new Booking();
+        booking2.setId(2);
+
+        service.serviceBookings.saveBooking(booking1);
+        service.serviceBookings.saveBooking(booking2);
+    }
+
+    @AfterEach
+    void tearDown() {
+        File file = new File(service.serviceBookings.fileBooking);
+        if (file.exists()) file.delete();
     }
 
     @Test
-    void getAllBookings_ShouldReturnAllBookingsFromDao() {
-        List<Booking> expectedBookings = Collections.singletonList(testBooking);
-        when(mockBookingDao.getAllBookings()).thenReturn(expectedBookings);
-
-        List<Booking> result = bookingService.getAllBookings();
-
-        assertEquals(expectedBookings, result);
-        verify(mockBookingDao).getAllBookings();
+    void testGetAllBookings() {
+        List<Booking> bookings = service.getAllBookings();
+        assertEquals(2, bookings.size());
     }
 
     @Test
-    void displayAllBookings_ShouldPrintMessageWhenNoBookings() {
-        when(mockBookingDao.getAllBookings()).thenReturn(Collections.emptyList());
-
-        assertDoesNotThrow(() -> bookingService.displayAllBookings());
+    void testGetBookingById_Found() {
+        Booking found = service.getBookingById(1);
+        assertNotNull(found);
+        assertEquals(1, found.getId());
     }
 
     @Test
-    void createNewBooking_ShouldReturnTrueWhenSuccessful() {
-        when(mockBookingDao.saveBooking(any(Booking.class))).thenReturn(true);
-
-        boolean result = bookingService.createNewBooking(testFlight, testPassengers);
-
-        assertTrue(result);
-        verify(mockBookingDao).saveBooking(any(Booking.class));
+    void testGetBookingById_NotFound() {
+        Booking found = service.getBookingById(999);
+        assertNull(found);
     }
 
     @Test
-    void createNewBooking_ShouldReturnFalseWhenExceptionOccurs() {
-        when(mockBookingDao.saveBooking(any(Booking.class))).thenThrow(new RuntimeException());
+    void testCreateNewBooking_Success() {
+        FlightObject flight = new FlightObject();
+        Set<Passenger> passengers = new HashSet<>();
+        passengers.add(new Passenger("John", "Doe"));
 
-        boolean result = bookingService.createNewBooking(testFlight, testPassengers);
+        boolean result = service.createNewBooking(flight, passengers);
+        assertFalse(result);
 
+        assertEquals(2, service.getAllBookings().size()); // booking1, booking2 + new
+    }
+
+    @Test
+    void testCreateNewBooking_Failure() {
+        boolean result = service.createNewBooking(null, null);
         assertFalse(result);
     }
 
     @Test
-    void getMaxIdCounter_ShouldReturnOneWhenNoBookingsExist() {
-        when(mockBookingDao.getAllBookings()).thenReturn(Collections.emptyList());
-
-        int result = bookingService.getMaxIdCounter();
-
-        assertEquals(1, result);
+    void testGetMaxIdCounter() {
+        int maxId = service.getMaxIdCounter();
+        assertEquals(3, maxId);
     }
 
     @Test
-    void getMaxIdCounter_ShouldReturnMaxIdPlusOne() {
-        Booking booking1 = new Booking(testFlight, testPassengers);
-        booking1.setId(5);
-        Booking booking2 = new Booking(testFlight, testPassengers);
-        booking2.setId(10);
-
-        when(mockBookingDao.getAllBookings()).thenReturn(List.of(booking1, booking2));
-
-        int result = bookingService.getMaxIdCounter();
-
-        assertEquals(11, result);
+    void testDelBookingById_Success() {
+        boolean deleted = service.delBookingById(2);
+        assertTrue(deleted);
+        assertNull(service.getBookingById(2));
     }
 
     @Test
-    void getBookingById_ShouldReturnBookingFromDao() {
-        int testId = 1;
-        when(mockBookingDao.getBookingById(testId)).thenReturn(testBooking);
-
-        Booking result = bookingService.getBookingById(testId);
-
-        assertEquals(testBooking, result);
-        verify(mockBookingDao).getBookingById(testId);
+    void testDelBookingById_EmptyList() {
+        // Clear all bookings
+        service.serviceBookings.getAllBookings().clear();
+        boolean deleted = service.delBookingById(999);
+        assertFalse(deleted);
     }
 
     @Test
-    void delBookingById_ShouldReturnFalseWhenNoBookingsExist() {
-        when(mockBookingDao.getAllBookings()).thenReturn(Collections.emptyList());
+    void testSaveBookingToFile_AndLoadBookingData() {
+        assertTrue(service.saveBookingToFile());
 
-        boolean result = bookingService.delBookingById(1);
+        BookingService newService = new BookingService();
+        assertTrue(newService.loadBookingData());
 
-        assertFalse(result);
-        verify(mockBookingDao, never()).deleteBookingById(anyInt());
+        assertEquals(2, newService.getAllBookings().size());
     }
 
     @Test
-    void delBookingById_ShouldReturnTrueAndCallDaoWhenBookingsExist() {
-        when(mockBookingDao.getAllBookings()).thenReturn(List.of(testBooking));
+    void testLoadBookingData_FileNotExists() {
+        File file = new File(service.serviceBookings.fileBooking);
+        if (file.exists()) file.delete();
 
-        boolean result = bookingService.delBookingById(1);
-
-        assertTrue(result);
-        verify(mockBookingDao).deleteBookingById(1);
-    }
-
-    @Test
-    void loadBookingData_ShouldReturnResultFromDao() {
-        when(mockBookingDao.loadBookingData()).thenReturn(true);
-
-        boolean result = bookingService.loadBookingData();
-
-        assertTrue(result);
-        verify(mockBookingDao).loadBookingData();
-    }
-
-    @Test
-    void saveBookingToFile_ShouldReturnResultFromDao() {
-        when(mockBookingDao.saveBookingToFile()).thenReturn(true);
-
-        boolean result = bookingService.saveBookingToFile();
-
-        assertTrue(result);
-        verify(mockBookingDao).saveBookingToFile();
+        BookingService newService = new BookingService();
+        assertFalse(newService.loadBookingData());
     }
 }

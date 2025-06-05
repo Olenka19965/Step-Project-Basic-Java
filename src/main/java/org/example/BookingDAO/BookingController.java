@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class BookingController {
-    protected BookingService bookingService;
+    public BookingService bookingService;
 
     public BookingController() { this.bookingService = new BookingService();}
 
