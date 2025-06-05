@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class FlightDAO {
     private List <FlightObject> flights = new ArrayList<>();
     private static final int TOTAL_SEATS = 50;
-    private static final String fileFlight = "scr/DataBase/flights.dat";
+    private static final String fileFlight = "flights.dat";
     public void generateFlights(){
         Random random = new Random();
         FlightObject.Destination[]destinations = FlightObject.Destination.values();

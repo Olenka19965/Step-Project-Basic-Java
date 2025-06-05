@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CollectionBookingDao implements BookingDAO {
     private List<Booking> bookings = new ArrayList<>();
-    public static final String fileBooking = "scr/DataBase/bookings.dat";
+    public static final String fileBooking = "bookings.dat";
 
     public List<Booking> getAllBookings() { return bookings; }
     public Booking getBookingById (int id) {
