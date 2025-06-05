@@ -7,6 +7,7 @@ public class Passenger implements Serializable {
     private String name;
     private String surname;
 
+    public Passenger(){} // For tests
     public Passenger (String name, String surname) {
         this.name = name;
         this.surname = surname;

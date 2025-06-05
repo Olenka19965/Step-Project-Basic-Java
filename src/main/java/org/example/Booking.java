@@ -16,11 +16,13 @@ import static org.example.Console.MainMenu.bookingController;
 
 
 public class Booking implements Serializable {
-    private final int id;
+    private int id;
     private FlightObject.Destination destination;
     private String flightId;
     private LocalDate date;
     private Set<Passenger> passengers;
+
+    public Booking(){};
 
     public Booking (FlightObject flight, Set<Passenger> passengers) {
         this.id = bookingController.getMaxIdCounter();
@@ -29,7 +31,7 @@ public class Booking implements Serializable {
         this.date = flight.getDepartureTime().toLocalDate();
         this.passengers = passengers;
     }
-
+    public void setId(int id) { this.id = id; }
     public int getId() { return id; }
 
     public void setDestination(FlightObject.Destination destination) { this.destination = destination; }

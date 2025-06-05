@@ -12,8 +12,9 @@
 //import java.util.*;
 //
 //import static org.junit.jupiter.api.Assertions.*;
+//import static org.mockito.Mockito.*;
 //
-//class BookingControllerTest {
+//class TestBookingController {
 //
 //    private BookingController bookingController;
 //    private BookingService bookingServiceMock;
