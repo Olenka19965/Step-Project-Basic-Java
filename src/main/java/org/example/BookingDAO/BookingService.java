@@ -9,15 +9,6 @@ import java.util.Set;
 import java.util.stream.IntStream;
 
 public class BookingService {
-//    public CollectionBookingDao serviceBookings;
-//
-//    public BookingService() {
-//        this.serviceBookings = new CollectionBookingDao();
-//    }
-//
-//    public BookingService(CollectionBookingDao dao) {
-//        this.serviceBookings = dao;
-//    }
 
     public CollectionBookingDao serviceBookings = new CollectionBookingDao();
        public List<Booking> getAllBookings() {

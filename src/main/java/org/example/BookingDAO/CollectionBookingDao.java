@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollectionBookingDao implements BookingDAO {
+public class CollectionBookingDao {
     private List<Booking> bookings = new ArrayList<>();
     public static final String fileBooking = "bookings.dat";
 

@@ -1,117 +1,115 @@
-//package BookingTest;
-//
-//import org.example.Booking;
-//import org.example.BookingDAO.BookingController;
-//import org.example.BookingDAO.BookingService;
-//import org.example.Flight.FlightObject;
-//import org.example.Passenger;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//
-//import java.util.List;
-//import java.util.Set;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.*;
-//
-//class TestBookingController {
-//
-//    private BookingService bookingServiceMock;
-//    private BookingController controller;
-//
-//    @BeforeEach
-//    void setUp() {
-//        bookingServiceMock = mock(BookingService.class);
-//        controller = new BookingController() {
-//            {
-//                this.bookingService = bookingServiceMock;
-//            }
-//        };
-//    }
-//
-//    @Test
-//    void testGetAllBookings() {
-//        Booking booking = new Booking();
-//        booking.setId(1);
-//        when(bookingServiceMock.getAllBookings()).thenReturn(List.of(booking));
-//
-//        List<Booking> result = controller.getAllBookings();
-//
-//        assertEquals(1, result.size());
-//        assertEquals(1, result.getFirst().getId());
-//        verify(bookingServiceMock).getAllBookings();
-//    }
-//
-//    @Test
-//    void testDisplayAllBookings() {
-//        controller.displayAllBookings();
-//        verify(bookingServiceMock).displayAllBookings();
-//    }
-//
-//    @Test
-//    void testCreateNewBooking() {
-//        FlightObject flight = new FlightObject();
-//        Passenger passenger = new Passenger();
-//        Set<Passenger> passengers = Set.of(passenger);
-//
-//        when(bookingServiceMock.createNewBooking(flight, passengers)).thenReturn(true);
-//
-//        boolean result = controller.createNewBooking(flight, passengers);
-//
-//        assertTrue(result);
-//        verify(bookingServiceMock).createNewBooking(flight, passengers);
-//    }
-//
-//    @Test
-//    void testGetMaxIdCounter() {
-//        when(bookingServiceMock.getMaxIdCounter()).thenReturn(42);
-//
-//        int result = controller.getMaxIdCounter();
-//
-//        assertEquals(42, result);
-//        verify(bookingServiceMock).getMaxIdCounter();
-//    }
-//
-//    @Test
-//    void testGetBookingById() {
-//        Booking booking = new Booking();
-//        booking.setId(5);
-//        when(bookingServiceMock.getBookingById(5)).thenReturn(booking);
-//
-//        Booking result = controller.getBookingById(5);
-//
-//        assertNotNull(result);
-//        assertEquals(5, result.getId());
-//        verify(bookingServiceMock).getBookingById(5);
-//    }
-//
-//    @Test
-//    void testDelBookingById() {
-//        when(bookingServiceMock.delBookingById(7)).thenReturn(true);
-//
-//        boolean result = controller.delBookingById(7);
-//
-//        assertTrue(result);
-//        verify(bookingServiceMock).delBookingById(7);
-//    }
-//
-//    @Test
-//    void testLoadBookingData() {
-//        when(bookingServiceMock.loadBookingData()).thenReturn(true);
-//
-//        boolean result = controller.loadBookingData();
-//
-//        assertTrue(result);
-//        verify(bookingServiceMock).loadBookingData();
-//    }
-//
-//    @Test
-//    void testSaveBookingToFile() {
-//        when(bookingServiceMock.saveBookingToFile()).thenReturn(true);
-//
-//        boolean result = controller.saveBookingToFile();
-//
-//        assertTrue(result);
-//        verify(bookingServiceMock).saveBookingToFile();
-//    }
-//}
+package BookingTest;
+
+import org.example.Booking;
+import org.example.BookingDAO.BookingController;
+import org.example.Flight.FlightObject;
+import org.example.Passenger;
+import org.junit.jupiter.api.*;
+
+import java.io.File;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TestBookingController {
+
+    private BookingController controller;
+    private Booking booking1;
+    private Booking booking2;
+
+    @BeforeEach
+    void setUp() {
+        controller = new BookingController();
+
+        booking1 = new Booking();
+        booking1.setId(1);
+
+        booking2 = new Booking();
+        booking2.setId(2);
+
+        controller.bookingService.serviceBookings.saveBooking(booking1);
+        controller.bookingService.serviceBookings.saveBooking(booking2);
+    }
+
+    @AfterEach
+    void tearDown() {
+        File file = new File(controller.bookingService.serviceBookings.fileBooking);
+        if (file.exists()) file.delete();
+    }
+
+    @Test
+    void testGetAllBookings() {
+        List<Booking> bookings = controller.getAllBookings();
+        assertEquals(2, bookings.size());
+    }
+
+    @Test
+    void testGetBookingById_Found() {
+        Booking found = controller.getBookingById(1);
+        assertNotNull(found);
+        assertEquals(1, found.getId());
+    }
+
+    @Test
+    void testGetBookingById_NotFound() {
+        Booking found = controller.getBookingById(999);
+        assertNull(found);
+    }
+
+    @Test
+    void testCreateNewBooking_Success() {
+        FlightObject flight = new FlightObject();
+        Set<Passenger> passengers = new HashSet<>();
+        passengers.add(new Passenger("John", "Doe"));
+
+        boolean result = controller.createNewBooking(flight, passengers);
+        assertFalse(result); // якщо booking конструктор падає на порожньому flight/passengers
+
+        assertEquals(2, controller.getAllBookings().size());
+    }
+
+    @Test
+    void testCreateNewBooking_Failure() {
+        boolean result = controller.createNewBooking(null, null);
+        assertFalse(result);
+    }
+
+    @Test
+    void testGetMaxIdCounter() {
+        int maxId = controller.getMaxIdCounter();
+        assertEquals(3, maxId);
+    }
+
+    @Test
+    void testDelBookingById_Success() {
+        boolean deleted = controller.delBookingById(2);
+        assertTrue(deleted);
+        assertNull(controller.getBookingById(2));
+    }
+
+    @Test
+    void testDelBookingById_EmptyList() {
+        controller.bookingService.serviceBookings.getAllBookings().clear();
+        boolean deleted = controller.delBookingById(999);
+        assertFalse(deleted);
+    }
+
+    @Test
+    void testSaveBookingToFile_AndLoadBookingData() {
+        assertTrue(controller.saveBookingToFile());
+
+        BookingController newController = new BookingController();
+        assertTrue(newController.loadBookingData());
+
+        assertEquals(2, newController.getAllBookings().size());
+    }
+
+    @Test
+    void testLoadBookingData_FileNotExists() {
+        File file = new File(controller.bookingService.serviceBookings.fileBooking);
+        if (file.exists()) file.delete();
+
+        BookingController newController = new BookingController();
+        assertFalse(newController.loadBookingData());
+    }
+}

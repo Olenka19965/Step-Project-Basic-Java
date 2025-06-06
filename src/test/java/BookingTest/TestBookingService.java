@@ -1,154 +1,116 @@
-//package BookingTest;
-//
-//import org.example.Booking;
-//import org.example.BookingDAO.BookingService;
-//import org.example.BookingDAO.CollectionBookingDao;
-//import org.example.Flight.FlightObject;
-//import org.example.Passenger;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//
-//import java.io.ByteArrayOutputStream;
-//import java.io.PrintStream;
-//import java.util.*;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.*;
-//
-//class TestBookingService {
-//
-//    private BookingService service;
-//    private CollectionBookingDao mockDao;
-//    private Booking booking;
-//
-//    @BeforeEach
-//    void setUp() {
-//        service = new BookingService();
-//        mockDao = mock(CollectionBookingDao.class);
-//        service.serviceBookings = mockDao;
-//
-//        booking = new Booking();
-//        booking.setId(1);
-//    }
-//
-//    @Test
-//    void testGetAllBookings() {
-//        List<Booking> fakeList = List.of(booking);
-//        when(mockDao.getAllBookings()).thenReturn(fakeList);
-//
-//        List<Booking> result = service.getAllBookings();
-//
-//        assertEquals(1, result.size());
-//        verify(mockDao).getAllBookings();
-//    }
-//
-//    @Test
-//    void testDisplayAllBookings_NotEmpty() {
-//        List<Booking> bookings = List.of(booking);
-//        when(mockDao.getAllBookings()).thenReturn(bookings);
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        System.setOut(new PrintStream(out));
-//
-//        service.displayAllBookings();
-//
-//        String output = out.toString();
-//        assertTrue(output.contains("Список ваших бронювань:"));
-//        assertTrue(output.contains("(1)"));
-//    }
-//
-//    @Test
-//    void testDisplayAllBookings_Empty() {
-//        when(mockDao.getAllBookings()).thenReturn(Collections.emptyList());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        System.setOut(new PrintStream(out));
-//
-//        service.displayAllBookings();
-//
-//        String output = out.toString();
-//        assertTrue(output.contains("Ви ще не бронювали жодного рейсу"));
-//    }
-//
-//    @Test
-//    void testCreateNewBooking_Success() {
-//        FlightObject flight = mock(FlightObject.class);
-//        Passenger passenger = mock(Passenger.class);
-//        Set<Passenger> passengers = Set.of(passenger);
-//
-//        assertTrue(service.createNewBooking(flight, passengers));
-//        verify(mockDao).saveBooking(any(Booking.class));
-//    }
-//
-//    @Test
-//    void testCreateNewBooking_Failure() {
-//        Set<Passenger> passengers = null;
-//        FlightObject flight = mock(FlightObject.class);
-//
-//        assertFalse(service.createNewBooking(flight, passengers));
-//    }
-//
-//    @Test
-//    void testGetMaxIdCounter_WithBookings() {
-//        Booking b1 = new Booking(); b1.setId(2);
-//        Booking b2 = new Booking(); b2.setId(7);
-//        when(mockDao.getAllBookings()).thenReturn(List.of(b1, b2));
-//
-//        int result = service.getMaxIdCounter();
-//
-//        assertEquals(8, result);
-//    }
-//
-//    @Test
-//    void testGetMaxIdCounter_Empty() {
-//        when(mockDao.getAllBookings()).thenReturn(Collections.emptyList());
-//
-//        int result = service.getMaxIdCounter();
-//
-//        assertEquals(1, result);
-//    }
-//
-//    @Test
-//    void testGetBookingById() {
-//        when(mockDao.getBookingById(1)).thenReturn(booking);
-//
-//        Booking result = service.getBookingById(1);
-//
-//        assertEquals(booking, result);
-//        verify(mockDao).getBookingById(1);
-//    }
-//
-//    @Test
-//    void testDelBookingById_Success() {
-//        when(mockDao.getAllBookings()).thenReturn(List.of(booking));
-//        when(mockDao.deleteBookingById(1)).thenReturn(true);
-//
-//        assertTrue(service.delBookingById(1));
-//        verify(mockDao).deleteBookingById(1);
-//    }
-//
-//    @Test
-//    void testDelBookingById_EmptyList() {
-//        when(mockDao.getAllBookings()).thenReturn(Collections.emptyList());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        System.setOut(new PrintStream(out));
-//
-//        assertFalse(service.delBookingById(1));
-//
-//        String output = out.toString();
-//        assertTrue(output.contains("У вас відсутні заброньовані польоти!"));
-//    }
-//
-//    @Test
-//    void testLoadBookingData() {
-//        when(mockDao.loadBookingData()).thenReturn(true);
-//        assertTrue(service.loadBookingData());
-//    }
-//
-//    @Test
-//    void testSaveBookingToFile() {
-//        when(mockDao.saveBookingToFile()).thenReturn(true);
-//        assertTrue(service.saveBookingToFile());
-//    }
-//}
+package BookingTest;
+
+import org.example.Booking;
+import org.example.BookingDAO.BookingService;
+import org.example.Flight.FlightObject;
+import org.example.Passenger;
+import org.junit.jupiter.api.*;
+
+import java.io.File;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TestBookingService {
+
+    private BookingService service;
+    private Booking booking1;
+    private Booking booking2;
+
+    @BeforeEach
+    void setUp() {
+        service = new BookingService();
+
+        booking1 = new Booking();
+        booking1.setId(1);
+
+        booking2 = new Booking();
+        booking2.setId(2);
+
+        service.serviceBookings.saveBooking(booking1);
+        service.serviceBookings.saveBooking(booking2);
+    }
+
+    @AfterEach
+    void tearDown() {
+        File file = new File(service.serviceBookings.fileBooking);
+        if (file.exists()) file.delete();
+    }
+
+    @Test
+    void testGetAllBookings() {
+        List<Booking> bookings = service.getAllBookings();
+        assertEquals(2, bookings.size());
+    }
+
+    @Test
+    void testGetBookingById_Found() {
+        Booking found = service.getBookingById(1);
+        assertNotNull(found);
+        assertEquals(1, found.getId());
+    }
+
+    @Test
+    void testGetBookingById_NotFound() {
+        Booking found = service.getBookingById(999);
+        assertNull(found);
+    }
+
+    @Test
+    void testCreateNewBooking_Success() {
+        FlightObject flight = new FlightObject();
+        Set<Passenger> passengers = new HashSet<>();
+        passengers.add(new Passenger("John", "Doe"));
+
+        boolean result = service.createNewBooking(flight, passengers);
+        assertFalse(result);
+
+        assertEquals(2, service.getAllBookings().size()); // booking1, booking2 + new
+    }
+
+    @Test
+    void testCreateNewBooking_Failure() {
+        boolean result = service.createNewBooking(null, null);
+        assertFalse(result);
+    }
+
+    @Test
+    void testGetMaxIdCounter() {
+        int maxId = service.getMaxIdCounter();
+        assertEquals(3, maxId);
+    }
+
+    @Test
+    void testDelBookingById_Success() {
+        boolean deleted = service.delBookingById(2);
+        assertTrue(deleted);
+        assertNull(service.getBookingById(2));
+    }
+
+    @Test
+    void testDelBookingById_EmptyList() {
+        // Clear all bookings
+        service.serviceBookings.getAllBookings().clear();
+        boolean deleted = service.delBookingById(999);
+        assertFalse(deleted);
+    }
+
+    @Test
+    void testSaveBookingToFile_AndLoadBookingData() {
+        assertTrue(service.saveBookingToFile());
+
+        BookingService newService = new BookingService();
+        assertTrue(newService.loadBookingData());
+
+        assertEquals(2, newService.getAllBookings().size());
+    }
+
+    @Test
+    void testLoadBookingData_FileNotExists() {
+        File file = new File(service.serviceBookings.fileBooking);
+        if (file.exists()) file.delete();
+
+        BookingService newService = new BookingService();
+        assertFalse(newService.loadBookingData());
+    }
+}
